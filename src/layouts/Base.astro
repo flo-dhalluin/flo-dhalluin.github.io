@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+import { SITE } from '../config';
+import { url } from '../utils/url';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} | ${SITE.name}` : SITE.title;
+const path = Astro.url.pathname.replace(/\/$/, '');
+const isActive = (p: string) => path === url(p).replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href={url()} aria-label={`${SITE.name} home`}>
+          {SITE.logoLines.map((line) => <span>{line}</span>)}
+        </a>
+        <nav class="nav" aria-label="Main">
+          <a href={url('blog')} aria-current={isActive('blog') ? 'page' : undefined}>Blog</a>
+          <a href={url('about')} aria-current={isActive('about') ? 'page' : undefined}>About</a>
+          <a class="button" href={url('blog')}>{SITE.hero.cta}</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} {SITE.name}</span>
+        <ul>
+          {SITE.social.map((s) => <li><a href={s.href}>{s.label}</a></li>)}
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

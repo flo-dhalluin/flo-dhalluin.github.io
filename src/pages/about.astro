@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+import { url } from '../utils/url';
+---
+
+<Base title="About" description={`About ${SITE.name}`}>
+  <div class="page">
+    <div class="wrap about-grid">
+      <div>
+        <h1>About</h1>
+        <div class="prose">
+          <p>
+            Hi, I’m Alex. I write about creative work, small projects, and building a life that
+            fits. This blog is where I put the ideas I’m still working out.
+          </p>
+          <p>
+            Replace this text with your own story: who you are, what you make, and what readers
+            will find here.
+          </p>
+          <p>
+            Want to say hello? <a href={SITE.social[1]?.href}>Send me an email</a>.
+          </p>
+        </div>
+      </div>
+      <img src={url(SITE.hero.photo)} alt={SITE.hero.photoAlt} width="400" height="500" />
+    </div>
+  </div>
+</Base>

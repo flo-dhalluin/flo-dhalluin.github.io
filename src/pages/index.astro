@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+import { url, formatDate } from '../utils/url';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+const { hero } = SITE;
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="hero-greeting">{hero.greeting}</p>
+        <h1>{hero.headline}</h1>
+        <p class="hero-intro">{hero.intro}</p>
+        <a class="button" href={url('blog')}>{hero.cta}</a>
+      </div>
+      <img class="hero-photo" src={url(hero.photo)} alt={hero.photoAlt} width="400" height="500" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Latest articles</h2>
+      {posts.length === 0 ? (
+        <p class="empty">No articles yet. Add a .md file to src/content/posts/.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li>
+              <a href={url(`blog/${post.id}`)}>
+                <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+                <div>
+                  <h3>{post.data.title}</h3>
+                  <p>{post.data.description}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</Base>
